@@ -7,11 +7,7 @@ function StockContainer({ stocks, onBuy }) {
     <div className="col">
       <h2>Stocks</h2>
       {stocks.map((stock) => (
-        <Stock
-          key={stock.id}
-          stock={stock}
-          onClick={() => onBuy(stock)}
-        />
+        <Stock key={stock.id} stock={stock} onClick={() => onBuy(stock)} />
       ))}
     </div>
   );

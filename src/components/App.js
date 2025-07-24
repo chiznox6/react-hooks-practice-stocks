@@ -1,37 +1,27 @@
 // src/App.js
 import React, { useState, useEffect } from "react";
-import StockContainer from "./components/StockContainer";
-import PortfolioContainer from "./components/PortfolioContainer";
-import SearchBar from "./components/SearchBar";
+// src/App.js
+import SearchBar from "./SearchBar";
+import StockContainer from "./StockContainer";
+import PortfolioContainer from "./PortfolioContainer";
+
 
 function App() {
   const [stocks, setStocks] = useState([]);
   const [portfolio, setPortfolio] = useState([]);
-  const [sortType, setSortType] = useState(""); // "Alphabetically" | "Price"
+  const [sortType, setSortType] = useState("");
   const [filterType, setFilterType] = useState("All");
 
   useEffect(() => {
     fetch("http://localhost:3001/stocks")
       .then((res) => res.json())
-      .then(setStocks);
+      .then((data) => setStocks(data));
   }, []);
 
-  const handleBuy = (stock) => {
-    if (!portfolio.find((s) => s.id === stock.id)) {
-      setPortfolio([...portfolio, stock]);
-    }
-  };
-
-  const handleSell = (stock) => {
-    setPortfolio(portfolio.filter((s) => s.id !== stock.id));
-  };
-
-  const handleSort = (type) => setSortType(type);
-  const handleFilter = (type) => setFilterType(type);
-
-  const filteredStocks = stocks.filter(
-    (stock) => filterType === "All" || stock.type === filterType
-  );
+  const filteredStocks =
+    filterType === "All"
+      ? stocks
+      : stocks.filter((stock) => stock.type === filterType);
 
   const sortedStocks = [...filteredStocks].sort((a, b) => {
     if (sortType === "Alphabetically") return a.ticker.localeCompare(b.ticker);
@@ -39,10 +29,42 @@ function App() {
     return 0;
   });
 
+  function handleBuy(stock) {
+    if (!portfolio.find((s) => s.id === stock.id)) {
+      setPortfolio([...portfolio, stock]);
+    }
+  }
+
+  function handleSell(stock) {
+    setPortfolio(portfolio.filter((s) => s.id !== stock.id));
+  }
+
   return (
-    <div>
-      <SearchBar onSort={handleSort} onFilter={handleFilter} />
-      <div className="row">
+    <div
+      style={{
+        backgroundColor: "#e8f5e9",
+        minHeight: "100vh",
+        padding: "2rem",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <h1 style={{ textAlign: "center", color: "#1b5e20", marginBottom: "2rem" }}>
+        📈 Flatiron Stock Exchange
+      </h1>
+      <SearchBar
+        sortType={sortType}
+        setSortType={setSortType}
+        filterType={filterType}
+        setFilterType={setFilterType}
+      />
+      <div
+        style={{
+          display: "flex",
+          gap: "2rem",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+        }}
+      >
         <StockContainer stocks={sortedStocks} onBuy={handleBuy} />
         <PortfolioContainer portfolio={portfolio} onSell={handleSell} />
       </div>

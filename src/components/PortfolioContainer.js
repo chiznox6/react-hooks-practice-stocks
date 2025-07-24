@@ -7,17 +7,10 @@ function PortfolioContainer({ portfolio, onSell }) {
     <div className="col">
       <h2>My Portfolio</h2>
       {portfolio.map((stock) => (
-        <Stock
-          key={stock.id}
-          stock={stock}
-          onClick={() => onSell(stock)}
-        />
+        <Stock key={stock.id} stock={stock} onClick={() => onSell(stock)} />
       ))}
     </div>
   );
 }
 
-export default PortfolioContainer;
-
-
-export default PortfolioContainer;
+export default PortfolioContainer
